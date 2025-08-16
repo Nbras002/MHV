@@ -2,12 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Home, Settings, BarChart3, Activity, LogOut } from 'lucide-react';
+import { Home, Settings, BarChart3, Activity, LogOut, Globe } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
-  const { isRTL } = useLanguage();
+  const { isRTL, language, setLanguage } = useLanguage();
 
   if (!user) return null;
 
@@ -29,16 +29,41 @@ const Navigation: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MHV</span>
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-xs">MHV</span>
               </div>
-              <span className="ml-2 text-lg sm:text-xl font-bold text-gray-900 hidden sm:block">
+              <span className="text-lg sm:text-xl font-bold text-gray-900 hidden sm:block">
                 {t('permits.title')}
               </span>
             </div>
           </div>
 
           <div className={`flex items-center space-x-2 sm:space-x-4 lg:space-x-6 ${isRTL ? 'space-x-reverse' : ''}`}>
+            {/* Language Toggle */}
+            <div className="flex items-center bg-gray-100 rounded-lg p-1">
+              <Globe className="w-3 h-3 text-gray-500 mr-1" />
+              <button
+                onClick={() => setLanguage('ar')}
+                className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                  language === 'ar'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                ع
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                  language === 'en'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
             <button
               onClick={() => handleNavigation('/')}
               className="flex items-center space-x-1 sm:space-x-2 text-gray-700 hover:text-purple-600 transition-colors"

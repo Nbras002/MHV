@@ -38,7 +38,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onLogin }) => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.passwordsDoNotMatch'));
       return;
     }
 

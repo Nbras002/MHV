@@ -51,7 +51,12 @@ const LoginPage: React.FC = () => {
                 {getTitle()}
               </h1>
               <p className="text-gray-600 text-sm">
-                Materials and Heavy Vehicles Permit System
+              <span dir="rtl" style={{ display: 'block' }}>
+                نظام تصاريح المواد والمركبات الثقيلة
+                </span>
+                <span dir="ltr" style={{ display: 'block' }}>
+                  Materials and Heavy Vehicles Permit System
+                  </span>
               </p>
             </div>
             

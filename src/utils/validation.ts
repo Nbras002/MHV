@@ -32,28 +32,49 @@ export const formatVehiclePlate = (plate: string, isArabic: boolean): string => 
   const letters = plate.substring(4, 7);
   
   if (isArabic) {
-    // Convert English letters to Arabic equivalents
-    const arabicMap: { [key: string]: string } = {
-      'A': 'ا', 'B': 'ب', 'J': 'ح', 'D': 'د', 'R': 'ر', 'S': 'س', 
-      'X': 'ص', 'T': 'ط', 'E': 'ع', 'G': 'ق', 'K': 'ك', 'L': 'ل', 
-      'Z': 'م', 'N': 'ن', 'H': 'هـ', 'U': 'و', 'V': 'ى'
-    };
-    const arabicLetters = letters.split('').map(letter => arabicMap[letter] || letter).join(' ');
-    return `${arabicLetters} ${digits}`;
-  } else {
-    return `${digits} ${letters.split('').join(' ')}`;
+    // If letters are in English, convert to Arabic
+    let arabicLetters = letters;
+    if (/[A-Z]/.test(letters)) {
+      const arabicMap: { [key: string]: string } = {
+        'A': 'ا', 'B': 'ب', 'J': 'ح', 'D': 'د', 'R': 'ر', 'S': 'س', 
+        'X': 'ص', 'T': 'ط', 'E': 'ع', 'G': 'ق', 'K': 'ك', 'L': 'ل', 
+        'Z': 'م', 'N': 'ن', 'H': 'هـ', 'U': 'و', 'V': 'ى'
+      };
+      arabicLetters = letters.split('').map(letter => arabicMap[letter] || letter).join('');
+    }
+    return digits && arabicLetters ? `${arabicLetters.split('').join(' ')} ${digits}` : plate;
   }
+  // return value.slice(0, -1); // Remove last character if invalid
+    // If letters are in Arabic, convert to English
+    let englishLetters = letters;
+    if (/[ابحدرسصطعقكلمنهـوى]/.test(letters)) {
+      const englishMap: { [key: string]: string } = {
+        'ا': 'A', 'ب': 'B', 'ح': 'J', 'د': 'D', 'ر': 'R', 'س': 'S',
+        'ص': 'X', 'ط': 'T', 'ع': 'E', 'ق': 'G', 'ك': 'K', 'ل': 'L',
+        'م': 'Z', 'ن': 'N', 'هـ': 'H', 'و': 'U', 'ى': 'V'
+      };
+      englishLetters = letters.split('').map(letter => englishMap[letter] || letter).join('');
+    }
+    return digits && englishLetters ? `${digits} ${englishLetters.split('').join(' ')}` : plate;
 };
 
 export const parseVehiclePlate = (formattedPlate: string): string => {
-  // Remove spaces and convert Arabic letters back to English
+  const plate = formattedPlate;
+  if (plate === 'N/A' || !plate) return plate;
   const arabicToEnglishMap: { [key: string]: string } = {
     'ا': 'A', 'ب': 'B', 'ح': 'J', 'د': 'D', 'ر': 'R', 'س': 'S',
     'ص': 'X', 'ط': 'T', 'ع': 'E', 'ق': 'G', 'ك': 'K', 'ل': 'L',
     'م': 'Z', 'ن': 'N', 'هـ': 'H', 'و': 'U', 'ى': 'V'
   };
   
-  return formattedPlate.replace(/\s/g, '').split('').map(char => 
-    arabicToEnglishMap[char] || char
-  ).join('');
-}
+  // Remove existing spaces
+  const cleanPlate = plate.replace(/\s/g, '');
+  
+  // Extract digits and letters
+  const digits = cleanPlate.match(/\d+/g)?.join('') || '';
+  const letters = cleanPlate.match(/[ابحدرسصطعقكلمنهـوىABJDRSXTEGKLZNHUV]+/g)?.join('') || '';
+  
+  const englishLetters = letters.split('').map(letter => arabicToEnglishMap[letter] || letter).join('');
+  
+  return digits + englishLetters;
+};

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import QrScanner from 'qr-scanner';
 import { X, Camera } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface QRScannerProps {
 }
 
 const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose, isOpen }) => {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [scanner, setScanner] = useState<QrScanner | null>(null);
   const [error, setError] = useState<string>('');
@@ -28,7 +30,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose, isOpen }) => {
       );
 
       qrScanner.start().catch((err) => {
-        setError('Camera access denied or not available');
+        setError(t('common.cameraAccessDenied'));
         console.error('QR Scanner error:', err);
       });
 
@@ -49,7 +51,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose, isOpen }) => {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
             <Camera className="w-5 h-5 mr-2" />
-            Scan QR Code
+            {t('common.scanQRCode')}
           </h3>
           <button
             onClick={onClose}
@@ -66,7 +68,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose, isOpen }) => {
               onClick={onClose}
               className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
             >
-              Close
+              {t('common.close')}
             </button>
           </div>
         ) : (
@@ -86,7 +88,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose, isOpen }) => {
         )}
 
         <p className="text-sm text-gray-600 mt-4 text-center">
-          Position the QR code within the frame to scan
+          {t('common.positionQRCode')}
         </p>
       </div>
     </div>

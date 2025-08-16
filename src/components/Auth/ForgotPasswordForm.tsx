@@ -57,7 +57,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onLogin }) => {
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.passwordsDoNotMatch'));
       return;
     }
 

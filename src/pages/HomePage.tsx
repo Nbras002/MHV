@@ -8,6 +8,7 @@ import { Permit, REGIONS, REQUEST_TYPES } from '../types';
 import { exportPermitsToExcel } from '../utils/excel';
 import { validatePermitNumber, formatVehiclePlate, parseVehiclePlate } from '../utils/validation';
 import QRScanner from '../components/QRScanner';
+import VehiclePlateInput from '../components/VehiclePlateInput';
 import { 
   Search, 
   QrCode, 
@@ -184,7 +185,7 @@ const HomePage: React.FC = () => {
     if (validatePermitNumber(result)) {
       setSearchTerm(result);
     } else {
-      alert('Invalid QR code format');
+      alert(t('common.invalidQRFormat'));
     }
   };
 
@@ -218,22 +219,17 @@ const HomePage: React.FC = () => {
   };
 
   const handleVehiclePlateChange = (value: string) => {
-    // Remove spaces and convert to uppercase
-    const cleanValue = value.replace(/\s/g, '').toUpperCase();
+    // Allow spaces, Arabic letters, English letters, and digits
+    const validChars = /^[\d\sابحدرسصطعقكلمنهـوىABJDRSXTEGKLZNHUV]*$/;
     
-    // Validate Saudi vehicle plate characters
-    const validChars = /^[\d]*[ABJDRSXTEGKLZNHUV]*$/;
-    if (validChars.test(cleanValue) && cleanValue.length <= 7) {
-      setNewPermit({ ...newPermit, vehiclePlate: cleanValue });
+    if (validChars.test(value) && value.length <= 10) { // Allow for spaces
+      setNewPermit({ ...newPermit, vehiclePlate: value });
     }
   };
 
   const getDisplayVehiclePlate = (plate: string) => {
     if (plate === 'N/A') return 'N/A';
-    if (plate.length === 7) {
-      return formatVehiclePlate(plate, language === 'ar');
-    }
-    return plate;
+    return formatVehiclePlate(plate, language === 'ar');
   };
 
   return (
@@ -241,7 +237,7 @@ const HomePage: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{t('permits.title')}</h1>
-          <p className="text-sm sm:text-base text-gray-600">Manage and track all permits in the system</p>
+          <p className="text-sm sm:text-base text-gray-600">{t('permits.subtitle')}</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 mt-6 lg:mt-0">
@@ -479,7 +475,7 @@ const HomePage: React.FC = () => {
                       required
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Format: 3 letters + digits (e.g., MHV0000001)
+                      {t('permits.permitNumberFormat')}
                     </p>
                   </div>
 
@@ -587,18 +583,11 @@ const HomePage: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {t('permits.vehiclePlate')}
                     </label>
-                    <div className="relative">
-                      <Truck className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
-                      <input
-                        type="text"
-                        value={getDisplayVehiclePlate(newPermit.vehiclePlate)}
-                        onChange={(e) => handleVehiclePlateChange(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono"
-                        placeholder={language === 'ar' ? 'ح ن ط 1234' : '1234 T N J'}
-                        disabled={newPermit.requestType === 'material_entrance' || newPermit.requestType === 'material_exit'}
-                        required
-                      />
-                    </div>
+                    <VehiclePlateInput
+                      value={newPermit.vehiclePlate}
+                      onChange={(value) => setNewPermit({ ...newPermit, vehiclePlate: value })}
+                      disabled={newPermit.requestType === 'material_entrance' || newPermit.requestType === 'material_exit'}
+                    />
                     <p className="text-xs text-gray-500 mt-1">
                       {language === 'ar' ? 'صيغة: أرقام + حروف (مثال: ح ن ط 1234)' : 'Format: digits + letters (e.g., 1234 T N J)'}
                     </p>

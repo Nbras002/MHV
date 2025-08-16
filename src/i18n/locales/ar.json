@@ -13,7 +13,7 @@
     "password": "كلمة المرور",
     "email": "عنوان البريد الإلكتروني",
     "firstName": "الاسم الأول",
-    "lastName": "اسم العائلة",
+    "lastName": "اسم الأخير",
     "region": "المنطقة",
     "forgotPassword": "نسيت كلمة المرور؟",
     "confirmPassword": "تأكيد كلمة المرور",
@@ -28,7 +28,8 @@
     "registerSuccess": "تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.",
     "registerError": "اسم المستخدم أو البريد الإلكتروني موجود بالفعل",
     "resetSuccess": "تم إعادة تعيين كلمة المرور بنجاح!",
-    "resetError": "اسم المستخدم أو كلمة المرور القديمة غير صحيحة"
+    "resetError": "اسم المستخدم أو كلمة المرور القديمة غير صحيحة",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة"
   },
   "regions": {
     "headquarters": "المقر الرئيسي",
@@ -66,6 +67,7 @@
   },
   "permits": {
     "title": "إدارة التصاريح",
+    "subtitle": "إدارة وتتبع جميع التصاريح في النظام",
     "search": "البحث في التصاريح...",
     "scanQR": "مسح رمز الاستجابة السريعة للبحث",
     "filterRegion": "تصفية حسب المنطقة",
@@ -104,12 +106,14 @@
     "deleteConfirm": "هل أنت متأكد من حذف هذا التصريح؟",
     "closeConfirm": "هل أنت متأكد من إغلاق هذا التصريح؟",
     "reopenConfirm": "هل أنت متأكد من إعادة فتح هذا التصريح؟",
-    "invalidPermitNumber": "رقم التصريح يجب أن يكون بصيغة: ثلاثة أحرف متبوعة بأرقام (مثال: MHV0000001)",
+    "invalidPermitNumber": "رقم التصريح يجب أن يكون بصيغة: ثلاثة أحرف متبوعة بأرقام (مثال: MHV1234567 أو DCO12345)",
     "cannotReopenTime": "لا يمكن إعادة فتح التصريح بعد مرور ساعة من إغلاقه",
-    "cannotReopenUser": "يمكن إعادة فتح التصريح فقط من قبل نفس المستخدم الذي أغلقه أو المدير"
+    "cannotReopenUser": "يمكن إعادة فتح التصريح فقط من قبل نفس المستخدم الذي أغلقه أو المدير",
+    "permitNumberFormat": "الصيغة: 3 أحرف + أرقام (مثال: MHV1234567 أو DCO12345)"
   },
   "users": {
     "title": "إدارة المستخدمين",
+    "subtitle": "إدارة حسابات المستخدمين والصلاحيات",
     "addUser": "إضافة مستخدم جديد",
     "editUser": "تحرير المستخدم",
     "role": "الدور",
@@ -122,23 +126,44 @@
     "userDeleted": "تم حذف المستخدم بنجاح!",
     "permissions": "الصلاحيات",
     "customPermissions": "صلاحيات مخصصة",
-    "managePermissions": "إدارة الصلاحيات"
+    "managePermissions": "إدارة الصلاحيات",
+    "more": "المزيد",
+    "never": "أبداً",
+    "canCreatePermits": "إنشاء التصاريح",
+    "canEditPermits": "تعديل التصاريح",
+    "canDeletePermits": "حذف التصاريح",
+    "canClosePermits": "إغلاق التصاريح",
+    "canReopenPermits": "إعادة فتح التصاريح",
+    "canViewPermits": "عرض التصاريح",
+    "canExportPermits": "تصدير التصاريح",
+    "canManageUsers": "إدارة المستخدمين",
+    "canViewStatistics": "عرض الإحصائيات",
+    "canViewActivityLog": "عرض سجل النشاط",
+    "canManagePermissions": "إدارة الصلاحيات",
+    "resetToDefault": "إعادة تعيين إلى الافتراضي"
   },
   "statistics": {
     "title": "لوحة الإحصائيات",
+    "subtitle": "نظرة عامة على نشاط النظام ومقاييس الأداء",
     "totalPermits": "إجمالي التصاريح",
     "activePermits": "التصاريح النشطة",
     "closedPermits": "التصاريح المغلقة",
+    "totalUsers": "إجمالي المستخدمين",
     "permitsByRegion": "التصاريح حسب المنطقة",
     "permitsByType": "التصاريح حسب النوع",
     "permitsTrend": "اتجاه التصاريح",
     "topCarriers": "أكثر الناقلين",
     "noData": "لا توجد بيانات",
-    "topClosers": "المستخدمون الذين أغلقوا أكثر التصاريح",
-    "topCreators": "المستخدمون الذين أنشأوا أكثر التصاريح"
+    "topClosers": "المستخدمون الأكثر إغلاقًا للتصاريح",
+    "topCreators": "المستخدمون الأكثر إنشاءً للتصاريح"
   },
   "activityLog": {
     "title": "سجل النشاط",
+    "subtitle": "تتبع جميع إجراءات المستخدمين وأنشطة النظام",
+    "searchPlaceholder": "البحث في الأنشطة...",
+    "allActions": "جميع الإجراءات",
+    "showing": "عرض {{filtered}} من {{total}} نشاط",
+    "noActivities": "لا توجد أنشطة",
     "user": "المستخدم",
     "action": "الإجراء",
     "details": "التفاصيل",
@@ -155,6 +180,19 @@
       "update_user": "تحديث مستخدم",
       "delete_user": "حذف مستخدم",
       "export_permits": "تصدير التصاريح"
+    },
+    "details": {
+      "login": "تم تسجيل الدخول بنجاح",
+      "logout": "تم تسجيل الخروج",
+      "create_permit": "تم إنشاء تصريح {{permitNumber}}",
+      "update_permit": "تم تحديث تصريح {{permitNumber}}",
+      "delete_permit": "تم حذف تصريح {{permitNumber}}",
+      "close_permit": "تم إغلاق تصريح {{permitNumber}}",
+      "reopen_permit": "تم إعادة فتح تصريح {{permitNumber}}",
+      "create_user": "تم إنشاء مستخدم {{username}}",
+      "update_user": "تم تحديث مستخدم {{username}}",
+      "delete_user": "تم حذف مستخدم {{username}}",
+      "export_permits": "تم تصدير {{count}} تصريح"
     }
   },
   "common": {
@@ -172,6 +210,10 @@
     "refresh": "تحديث",
     "noResults": "لا توجد نتائج",
     "selectAll": "تحديد الكل",
-    "clearAll": "مسح الكل"
+    "clearAll": "مسح الكل",
+    "scanQRCode": "مسح رمز الاستجابة السريعة",
+    "cameraAccessDenied": "تم رفض الوصول للكاميرا أو غير متاحة",
+    "positionQRCode": "ضع رمز الاستجابة السريعة داخل الإطار للمسح",
+    "invalidQRFormat": "تنسيق رمز الاستجابة السريعة غير صالح"
   }
 }

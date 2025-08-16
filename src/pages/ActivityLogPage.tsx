@@ -29,7 +29,7 @@ const ActivityLogPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('activityLog.title')}</h1>
-        <p className="text-gray-600">Track all user actions and system activities</p>
+        <p className="text-gray-600">{t('activityLog.subtitle')}</p>
       </div>
 
       {/* Filters */}
@@ -39,7 +39,7 @@ const ActivityLogPage: React.FC = () => {
             <Search className="w-5 h-5 text-gray-400 absolute left-3 top-3" />
             <input
               type="text"
-              placeholder="Search activities..."
+              placeholder={t('activityLog.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -53,7 +53,7 @@ const ActivityLogPage: React.FC = () => {
               onChange={(e) => setFilterAction(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              <option value="">All Actions</option>
+              <option value="">{t('activityLog.allActions')}</option>
               {uniqueActions.map(action => (
                 <option key={action} value={action}>
                   {t(`activityLog.actions.${action}`)}
@@ -91,16 +91,16 @@ const ActivityLogPage: React.FC = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('activityLog.timestamp')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('activityLog.user')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('activityLog.action')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('activityLog.details')}
                 </th>
               </tr>
@@ -109,19 +109,19 @@ const ActivityLogPage: React.FC = () => {
               {filteredActivities.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                    No activities found
+                    {t('activityLog.noActivities')}
                   </td>
                 </tr>
               ) : (
                 filteredActivities.map((activity) => (
                   <tr key={activity.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                       {format(new Date(activity.timestamp), 'yyyy-MM-dd HH:mm:ss')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                       {activity.userName}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         activity.action.includes('create') ? 'bg-green-100 text-green-800' :
                         activity.action.includes('update') ? 'bg-blue-100 text-blue-800' :
@@ -132,8 +132,8 @@ const ActivityLogPage: React.FC = () => {
                         {t(`activityLog.actions.${activity.action}`)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {activity.details}
+                    <td className="px-6 py-4 text-sm text-gray-500 text-center">
+                      {typeof activity.details === 'string' ? activity.details : JSON.stringify(activity.details)}
                     </td>
                   </tr>
                 ))
@@ -145,7 +145,7 @@ const ActivityLogPage: React.FC = () => {
 
       {filteredActivities.length > 0 && (
         <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
-          <span>Showing {filteredActivities.length} of {activities.length} activities</span>
+          <span>{t('activityLog.showing', { filtered: filteredActivities.length, total: activities.length })}</span>
         </div>
       )}
     </div>

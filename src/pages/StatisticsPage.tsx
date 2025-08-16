@@ -123,7 +123,7 @@ const StatisticsPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('statistics.title')}</h1>
-        <p className="text-gray-600">Overview of system activity and performance metrics</p>
+        <p className="text-gray-600">{t('statistics.subtitle')}</p>
       </div>
 
       {/* Summary Cards */}
@@ -170,7 +170,7 @@ const StatisticsPage: React.FC = () => {
               <TrendingUp className="w-6 h-6" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total Users</p>
+              <p className="text-sm font-medium text-gray-500">{t('statistics.totalUsers')}</p>
               <p className="text-2xl font-bold text-gray-900">{users.length}</p>
             </div>
           </div>

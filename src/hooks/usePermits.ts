@@ -58,7 +58,7 @@ export const usePermits = () => {
     if (permit && user) {
       const updates = {
         closedBy: user.id,
-        closedByName: `${user.firstName} ${user.lastName}`,
+        closedByName: `${user.firstName} ${user.lastName} [${user.username}]`,
         closedAt: new Date().toISOString(),
         canReopen: true
       };

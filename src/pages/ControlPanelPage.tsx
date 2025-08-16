@@ -158,7 +158,7 @@ const ControlPanelPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{t('users.title')}</h1>
-          <p className="text-gray-600">Manage user accounts and permissions</p>
+          <p className="text-gray-600">{t('users.subtitle')}</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 mt-6 lg:mt-0">
@@ -233,10 +233,10 @@ const ControlPanelPage: React.FC = () => {
                   </td>
                   <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500 text-center hidden lg:table-cell">
                     {user.region.slice(0, 2).map(region => t(`regions.${region}`)).join(', ')}
-                    {user.region.length > 2 && ` +${user.region.length - 2} more`}
+                    {user.region.length > 2 && ` +${user.region.length - 2} ${t('users.more')}`}
                   </td>
                   <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 text-center hidden lg:table-cell">
-                    {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
+                    {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : t('users.never')}
                   </td>
                   <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <div className="flex items-center justify-center space-x-1 sm:space-x-2">
@@ -484,7 +484,7 @@ const ControlPanelPage: React.FC = () => {
                             className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                           />
                           <span className="ml-2 text-sm text-gray-700">
-                            {permission.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                            {t(`users.${permission}`)}
                           </span>
                         </label>
                       ))}
@@ -497,11 +497,11 @@ const ControlPanelPage: React.FC = () => {
                 <button
                   onClick={() => {
                     saveRolePermissions(DEFAULT_ROLE_PERMISSIONS);
-                    alert('Permissions reset to default');
+                    alert(t('users.resetToDefault'));
                   }}
                   className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  Reset to Default
+                  {t('users.resetToDefault')}
                 </button>
                 <button
                   onClick={() => setShowPermissionsModal(false)}
