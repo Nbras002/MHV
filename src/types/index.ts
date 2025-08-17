@@ -24,6 +24,7 @@ export interface RolePermissions {
   canViewStatistics: boolean;
   canViewActivityLog: boolean;
   canManagePermissions: boolean;
+  canReopenAnyPermit: boolean;
 }
 
 export const DEFAULT_ROLE_PERMISSIONS: Record<string, RolePermissions> = {
@@ -39,6 +40,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, RolePermissions> = {
     canViewStatistics: true,
     canViewActivityLog: true,
     canManagePermissions: true,
+    canReopenAnyPermit: true,
   },
   manager: {
     canCreatePermits: true,
@@ -52,6 +54,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, RolePermissions> = {
     canViewStatistics: true,
     canViewActivityLog: true,
     canManagePermissions: false,
+    canReopenAnyPermit: true,
   },
   security_officer: {
     canCreatePermits: false,
@@ -65,6 +68,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, RolePermissions> = {
     canViewStatistics: false,
     canViewActivityLog: true,
     canManagePermissions: false,
+    canReopenAnyPermit: false,
   },
   observer: {
     canCreatePermits: false,
@@ -78,6 +82,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, RolePermissions> = {
     canViewStatistics: false,
     canViewActivityLog: false,
     canManagePermissions: false,
+    canReopenAnyPermit: false,
   },
 };
 

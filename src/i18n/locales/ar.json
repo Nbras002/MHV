@@ -21,6 +21,7 @@
     "registerButton": "تسجيل",
     "oldPassword": "كلمة المرور القديمة",
     "newPassword": "كلمة المرور الجديدة",
+    "newPasswordOptional": "كلمة المرور الجديدة (اتركها فارغة للاحتفاظ بالحالية)",
     "resetPassword": "إعادة تعيين كلمة المرور",
     "contactAdmin": "يرجى الاتصال بعنوان البريد الإلكتروني الإداري: info@mail.com",
     "passwordRequirements": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل تشمل أحرف كبيرة وصغيرة وأرقام ورموز",
@@ -140,6 +141,7 @@
     "canViewStatistics": "عرض الإحصائيات",
     "canViewActivityLog": "عرض سجل النشاط",
     "canManagePermissions": "إدارة الصلاحيات",
+    "canReopenAnyPermit": "إعادة فتح أي تصريح",
     "resetToDefault": "إعادة تعيين إلى الافتراضي"
   },
   "statistics": {

@@ -133,7 +133,7 @@ const ActivityLogPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                      {typeof activity.details === 'string' ? activity.details : JSON.stringify(activity.details)}
+                      {activity.details}
                     </td>
                   </tr>
                 ))

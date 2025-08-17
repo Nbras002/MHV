@@ -21,6 +21,7 @@
     "registerButton": "Register",
     "oldPassword": "Old Password",
     "newPassword": "New Password",
+    "newPasswordOptional": "New Password (leave empty to keep current)",
     "resetPassword": "Reset Password",
     "contactAdmin": "Please contact the administrative email address: info@mail.com",
     "passwordRequirements": "Password must contain at least 8 characters including uppercase, lowercase, numbers, and symbols",
@@ -140,6 +141,7 @@
     "canViewStatistics": "View Statistics",
     "canViewActivityLog": "View Activity Log",
     "canManagePermissions": "Manage Permissions",
+    "canReopenAnyPermit": "Reopen Any Permit",
     "resetToDefault": "Reset to Default"
   },
   "statistics": {

@@ -40,7 +40,7 @@ const Navigation: React.FC = () => {
 
           <div className={`flex items-center space-x-2 sm:space-x-4 lg:space-x-6 ${isRTL ? 'space-x-reverse' : ''}`}>
             {/* Language Toggle */}
-            <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center bg-gray-100 rounded-lg p-1 mr-4">
               <Globe className="w-3 h-3 text-gray-500 mr-1" />
               <button
                 onClick={() => setLanguage('ar')}

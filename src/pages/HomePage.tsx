@@ -147,7 +147,20 @@ const HomePage: React.FC = () => {
   };
 
   const handleReopen = (permit: Permit) => {
-    // Check if more than 1 hour has passed
+    const userPermissions = user?.permissions || DEFAULT_ROLE_PERMISSIONS[user?.role || 'observer'];
+    
+    // Check if user has permission to reopen any permit (admin/manager)
+    if (userPermissions.canReopenAnyPermit) {
+      if (window.confirm(t('permits.reopenConfirm'))) {
+        const success = reopenPermit(permit.id);
+        if (!success) {
+          alert(t('permits.cannotReopen'));
+        }
+      }
+      return;
+    }
+    
+    // For other users, check time and user restrictions
     if (permit.closedAt) {
       const closedTime = new Date(permit.closedAt);
       const now = new Date();
@@ -158,8 +171,8 @@ const HomePage: React.FC = () => {
         return;
       }
       
-      // Check if user can reopen (same user who closed it, or admin/manager)
-      const canReopenUser = permit.closedBy === user?.id || ['admin', 'manager'].includes(user?.role || '');
+      // Check if user can reopen (same user who closed it)
+      const canReopenUser = permit.closedBy === user?.id;
       if (!canReopenUser) {
         alert(t('permits.cannotReopenUser'));
         return;
@@ -411,17 +424,38 @@ const HomePage: React.FC = () => {
                         )}
                         
                         {canClose && (
-                          <button
-                            onClick={() => permit.closedAt ? handleReopen(permit) : handleClose(permit)}
-                            className={`p-1 ${permit.closedAt ? 'text-green-600 hover:text-green-700' : 'text-orange-600 hover:text-orange-700'}`}
-                            title={permit.closedAt ? t('permits.reopenPermit') : t('permits.closePermit')}
-                          >
+                          <>
                             {permit.closedAt ? (
-                              <Package className="w-4 h-4" />
+                              (() => {
+                                const userPermissions = user?.permissions || DEFAULT_ROLE_PERMISSIONS[user?.role || 'observer'];
+                                const canReopenAny = userPermissions.canReopenAnyPermit;
+                                const isClosedByUser = permit.closedBy === user?.id;
+                                const closedTime = permit.closedAt ? new Date(permit.closedAt) : null;
+                                const hoursPassed = closedTime ? (new Date().getTime() - closedTime.getTime()) / (1000 * 60 * 60) : 0;
+                                const withinTimeLimit = hoursPassed <= 1;
+                                
+                                const canReopen = canReopenAny || (isClosedByUser && withinTimeLimit);
+                                
+                                return canReopen ? (
+                                  <button
+                                    onClick={() => handleReopen(permit)}
+                                    className="text-green-600 hover:text-green-700 p-1"
+                                    title={t('permits.reopenPermit')}
+                                  >
+                                    <Package className="w-4 h-4" />
+                                  </button>
+                                ) : null;
+                              })()
                             ) : (
-                              <X className="w-4 h-4" />
+                              <button
+                                onClick={() => handleClose(permit)}
+                                className="text-orange-600 hover:text-orange-700 p-1"
+                                title={t('permits.closePermit')}
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
                             )}
-                          </button>
+                          </>
                         )}
                         
                         {canDelete && (
