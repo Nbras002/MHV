@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePermits } from '../hooks/usePermits';
 import { useActivityLog } from '../hooks/useActivityLog';
-import { Permit, REGIONS, REQUEST_TYPES } from '../types';
+import { Permit, REGIONS, REQUEST_TYPES, DEFAULT_ROLE_PERMISSIONS } from '../types';
 import { exportPermitsToExcel } from '../utils/excel';
 import { validatePermitNumber, formatVehiclePlate, parseVehiclePlate } from '../utils/validation';
 import QRScanner from '../components/QRScanner';
