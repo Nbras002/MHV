@@ -168,7 +168,7 @@
     "noActivities": "No activities found",
     "user": "User",
     "action": "Action",
-    "details": "Details",
+    "detailsLabel": "Details",
     "timestamp": "Timestamp",
     "actions": {
       "login": "User Login",

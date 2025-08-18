@@ -168,7 +168,7 @@
     "noActivities": "لا توجد أنشطة",
     "user": "المستخدم",
     "action": "الإجراء",
-    "details": "التفاصيل",
+    "detailsLabel": "التفاصيل",
     "timestamp": "الوقت",
     "actions": {
       "login": "دخول المستخدم",

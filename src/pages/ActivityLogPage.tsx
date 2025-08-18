@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useActivityLog } from '../hooks/useActivityLog';
 import { format } from 'date-fns';
-import { Activity, Search, Filter, Calendar } from 'lucide-react';
+import { Search, Filter, Calendar } from 'lucide-react';
 
 const ActivityLogPage: React.FC = () => {
   const { t } = useTranslation();
@@ -101,7 +101,7 @@ const ActivityLogPage: React.FC = () => {
                   {t('activityLog.action')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('activityLog.details')}
+                  {t('activityLog.detailsLabel')}
                 </th>
               </tr>
             </thead>
