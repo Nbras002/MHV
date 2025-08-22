@@ -56,17 +56,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('currentUser');
   };
 
-  const register = async (userData: Omit<User, 'id' | 'createdAt' | 'role'>): Promise<boolean> => {
-    // تحقق من عدم وجود مستخدم بنفس الاسم أو البريد
-    const { data: existing, error: existError } = await supabase.from('users').select('*').or(`username.eq.${userData.username},email.eq.${userData.email}`);
-    if (!existError && existing && existing.length > 0) {
+  const register = async (userData: Omit<User, 'id' | 'createdAt' | 'role' | 'password'> & { password: string }): Promise<boolean> => {
+    // التسجيل في Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password
+    });
+    if (authError || !authData?.user) {
       return false;
     }
+    // إضافة المستخدم لجدول users بنفس معرف Auth
     const newUser: User = {
-      ...userData,
-      id: crypto.randomUUID(),
-      role: 'observer',
-      createdAt: new Date().toISOString()
+  ...userData,
+  id: authData.user.id,
+  role: 'observer',
+  createdAt: new Date().toISOString()
     };
     const { error } = await supabase.from('users').insert([newUser]);
     if (!error) {
