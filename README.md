@@ -1,5 +1,4 @@
-# Materials and Heavy Vehicles Permit System
-
+# Heavy Materials and Vehicles Permit System
 
 A comprehensive permit management system built with React, Node.js, and PostgreSQL.
 

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
+import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -20,35 +21,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const savedUsers = localStorage.getItem('permitSystemUsers');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
-    } else {
-      // Initialize with default admin user
-      const defaultAdmin: User = {
-        id: '1',
-        username: 'admin',
-        password: 'Admin123!',
-        email: 'admin@example.com',
-        firstName: 'System',
-        lastName: 'Administrator',
-        region: ['headquarters'],
-        role: 'admin',
-        createdAt: new Date().toISOString()
-      };
-      setUsers([defaultAdmin]);
-      localStorage.setItem('permitSystemUsers', JSON.stringify([defaultAdmin]));
-    }
-
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    // جلب المستخدمين من Supabase
+    const fetchUsers = async () => {
+      const { data, error } = await supabase.from('users').select('*');
+      if (!error && data) {
+        setUsers(data as User[]);
+      }
+    };
+    fetchUsers();
   }, []);
 
   const saveUsers = (updatedUsers: User[]) => {
-    setUsers(updatedUsers);
-    localStorage.setItem('permitSystemUsers', JSON.stringify(updatedUsers));
+  setUsers(updatedUsers);
   };
 
   const login = async (username: string, password: string): Promise<boolean> => {
@@ -73,57 +57,63 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const register = async (userData: Omit<User, 'id' | 'createdAt' | 'role'>): Promise<boolean> => {
-    if (users.some(u => u.username === userData.username || u.email === userData.email)) {
+    // تحقق من عدم وجود مستخدم بنفس الاسم أو البريد
+    const { data: existing, error: existError } = await supabase.from('users').select('*').or(`username.eq.${userData.username},email.eq.${userData.email}`);
+    if (!existError && existing && existing.length > 0) {
       return false;
     }
-
     const newUser: User = {
       ...userData,
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       role: 'observer',
       createdAt: new Date().toISOString()
     };
-
-    const updatedUsers = [...users, newUser];
-    saveUsers(updatedUsers);
-    return true;
-  };
-
-  const resetPassword = async (username: string, oldPassword: string, newPassword: string): Promise<boolean> => {
-    const userIndex = users.findIndex(u => u.username === username && u.password === oldPassword);
-    if (userIndex !== -1) {
-      const updatedUsers = [...users];
-      updatedUsers[userIndex].password = newPassword;
-      saveUsers(updatedUsers);
+    const { error } = await supabase.from('users').insert([newUser]);
+    if (!error) {
+      setUsers([...users, newUser]);
       return true;
     }
     return false;
   };
 
-  const updateUser = (userId: string, updates: Partial<User>) => {
-    const updatedUsers = users.map(u => u.id === userId ? { ...u, ...updates } : u);
-    saveUsers(updatedUsers);
-    
-    if (user && user.id === userId) {
-      const updatedCurrentUser = { ...user, ...updates };
-      setUser(updatedCurrentUser);
-      localStorage.setItem('currentUser', JSON.stringify(updatedCurrentUser));
+  const resetPassword = async (username: string, oldPassword: string, newPassword: string): Promise<boolean> => {
+    // تحقق من المستخدم في Supabase
+    const { data, error } = await supabase.from('users').select('*').eq('username', username).eq('password', oldPassword).single();
+    if (!error && data) {
+      await supabase.from('users').update({ password: newPassword }).eq('id', data.id);
+      return true;
+    }
+    return false;
+  };
+
+  const updateUser = async (userId: string, updates: Partial<User>) => {
+    const { error } = await supabase.from('users').update(updates).eq('id', userId);
+    if (!error) {
+      setUsers(users.map(u => u.id === userId ? { ...u, ...updates } : u));
+      if (user && user.id === userId) {
+        const updatedCurrentUser = { ...user, ...updates };
+        setUser(updatedCurrentUser);
+      }
     }
   };
 
-  const addUser = (userData: Omit<User, 'id' | 'createdAt'>) => {
+  const addUser = async (userData: Omit<User, 'id' | 'createdAt'>) => {
     const newUser: User = {
       ...userData,
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       createdAt: new Date().toISOString()
     };
-    const updatedUsers = [...users, newUser];
-    saveUsers(updatedUsers);
+    const { error } = await supabase.from('users').insert([newUser]);
+    if (!error) {
+      setUsers([...users, newUser]);
+    }
   };
 
-  const deleteUser = (userId: string) => {
-    const updatedUsers = users.filter(u => u.id !== userId);
-    saveUsers(updatedUsers);
+  const deleteUser = async (userId: string) => {
+    const { error } = await supabase.from('users').delete().eq('id', userId);
+    if (!error) {
+      setUsers(users.filter(u => u.id !== userId));
+    }
   };
 
   return (
