@@ -226,7 +226,8 @@ INSERT INTO users (
   first_name, 
   last_name, 
   region, 
-  role
+  role,
+  permissions
 ) VALUES (
   'admin',
   'Admin123!',
@@ -234,7 +235,21 @@ INSERT INTO users (
   'System',
   'Administrator',
   ARRAY['headquarters'],
-  'admin'
+  'admin',
+  '{
+    "canCreatePermits": true,
+    "canEditPermits": true,
+    "canDeletePermits": true,
+    "canClosePermits": true,
+    "canReopenPermits": true,
+    "canViewPermits": true,
+    "canExportPermits": true,
+    "canManageUsers": true,
+    "canViewStatistics": true,
+    "canViewActivityLog": true,
+    "canManagePermissions": true,
+    "canReopenAnyPermit": true
+  }'
 ) ON CONFLICT (username) DO NOTHING;
 
 -- Insert default role permissions
