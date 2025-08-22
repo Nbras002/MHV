@@ -59,11 +59,71 @@ export const requirePermission = (permission) => {
         .eq('role', req.user.role)
         .single();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         return res.status(500).json({ error: 'Failed to check permissions' });
       }
 
-      const permissions = rolePermissions?.permissions || {};
+      // Use default permissions if no custom permissions found
+      const defaultPermissions = {
+        admin: {
+          canCreatePermits: true,
+          canEditPermits: true,
+          canDeletePermits: true,
+          canClosePermits: true,
+          canReopenPermits: true,
+          canViewPermits: true,
+          canExportPermits: true,
+          canManageUsers: true,
+          canViewStatistics: true,
+          canViewActivityLog: true,
+          canManagePermissions: true,
+          canReopenAnyPermit: true,
+        },
+        manager: {
+          canCreatePermits: true,
+          canEditPermits: true,
+          canDeletePermits: false,
+          canClosePermits: true,
+          canReopenPermits: true,
+          canViewPermits: true,
+          canExportPermits: true,
+          canManageUsers: false,
+          canViewStatistics: true,
+          canViewActivityLog: true,
+          canManagePermissions: false,
+          canReopenAnyPermit: true,
+        },
+        security_officer: {
+          canCreatePermits: false,
+          canEditPermits: false,
+          canDeletePermits: false,
+          canClosePermits: true,
+          canReopenPermits: true,
+          canViewPermits: true,
+          canExportPermits: false,
+          canManageUsers: false,
+          canViewStatistics: false,
+          canViewActivityLog: true,
+          canManagePermissions: false,
+          canReopenAnyPermit: false,
+        },
+        observer: {
+          canCreatePermits: false,
+          canEditPermits: false,
+          canDeletePermits: false,
+          canClosePermits: false,
+          canReopenPermits: false,
+          canViewPermits: true,
+          canExportPermits: false,
+          canManageUsers: false,
+          canViewStatistics: false,
+          canViewActivityLog: false,
+          canManagePermissions: false,
+          canReopenAnyPermit: false,
+        },
+      };
+
+      const permissions = rolePermissions?.permissions || defaultPermissions[req.user.role] || {};
       
       if (!permissions[permission]) {
         return res.status(403).json({ error: 'Permission denied' });
