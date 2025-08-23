@@ -44,7 +44,7 @@ A comprehensive permit management system built with React, Node.js, and PostgreS
 3. Set the following:
    - **Root Directory**: `.` (root)
    - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
+   - **Publish Directory**: `dist`
    - **Node Version**: 18 or higher
 
 4. Add Environment Variables:
