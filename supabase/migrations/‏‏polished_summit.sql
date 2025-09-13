@@ -36,7 +36,8 @@
     - `activity_logs`
       - `id` (uuid, primary key)
       - `user_id` (uuid, foreign key)
-      - `user_name` (text)
+      - `name` (text)
+      - `username` (text)
       - `action` (text)
       - `details` (text)
       - `timestamp` (timestamp)
@@ -123,10 +124,11 @@ CREATE TABLE IF NOT EXISTS permits (
 );
 
 -- Create activity_logs table
-CREATE TABLE IF NOT EXISTS activity_logs (
+CREATE TABLE activity_logs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES users(id) NOT NULL,
-  user_name text NOT NULL,
+  name text NOT NULL,
+  username text NOT NULL,
   action text NOT NULL,
   details text NOT NULL,
   timestamp timestamptz DEFAULT now(),
