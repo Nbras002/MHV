@@ -113,7 +113,12 @@
     "permitNumberFormat": "الصيغة: 3 أحرف + أرقام (مثال: MHV1234567)",
     "materialLimitReached": "الحد الأقصى 50 مادة لكل تصريح",
     "vehiclePlateRequired": "رقم لوحة المركبة مطلوب لهذا النوع من الطلبات",
-    "materialsRequired": "مطلوب مادة واحدة على الأقل مع الوصف والرقم التسلسلي"
+    "materialsRequired": "مطلوب مادة واحدة على الأقل مع الوصف والرقم التسلسلي",
+    "createSuccess": "تم إنشاء التصريح بنجاح!",
+    "updateSuccess": "تم تحديث التصريح بنجاح!",
+    "deleteSuccess": "تم حذف التصريح بنجاح!",
+    "closeSuccess": "تم إغلاق التصريح بنجاح!",
+    "reopenSuccess": "تم إعادة فتح التصريح بنجاح!"
   },
   "users": {
     "title": "إدارة المستخدمين",
@@ -145,7 +150,9 @@
     "canViewActivityLog": "عرض سجل النشاط",
     "canManagePermissions": "إدارة الصلاحيات",
     "canReopenAnyPermit": "إعادة فتح أي تصريح",
-    "resetToDefault": "إعادة تعيين إلى الافتراضي"
+    "resetToDefault": "إعادة تعيين إلى الافتراضي",
+    "permissionsSaved": "تم حفظ الصلاحيات بنجاح!",
+    "permissionsSaveError": "فشل في حفظ الصلاحيات"
   },
   "statistics": {
     "title": "لوحة الإحصائيات",
@@ -217,6 +224,9 @@
     "scanQRCode": "مسح رمز الاستجابة السريعة",
     "cameraAccessDenied": "تم رفض الوصول للكاميرا أو غير متاحة",
     "positionQRCode": "ضع رمز الاستجابة السريعة داخل الإطار للمسح",
-    "invalidQRFormat": "تنسيق رمز الاستجابة السريعة غير صالح"
+    "invalidQRFormat": "تنسيق رمز الاستجابة السريعة غير صالح",
+    "deleteConfirm": "تأكيد الحذف",
+    "closeConfirm": "تأكيد الإغلاق",
+    "reopenConfirm": "تأكيد إعادة الفتح"
   }
 }

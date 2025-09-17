@@ -113,7 +113,12 @@
     "permitNumberFormat": "Format: 3 letters + digits (e.g., MHV1234567)",
     "materialLimitReached": "Maximum of 50 materials allowed per permit",
     "vehiclePlateRequired": "Vehicle license plate is required for this request type",
-    "materialsRequired": "At least one material with description and serial number is required"
+    "materialsRequired": "At least one material with description and serial number is required",
+    "createSuccess": "Permit created successfully!",
+    "updateSuccess": "Permit updated successfully!",
+    "deleteSuccess": "Permit deleted successfully!",
+    "closeSuccess": "Permit closed successfully!",
+    "reopenSuccess": "Permit reopened successfully!"
   },
   "users": {
     "title": "User Management",
@@ -145,7 +150,9 @@
     "canViewActivityLog": "View Activity Log",
     "canManagePermissions": "Manage Permissions",
     "canReopenAnyPermit": "Reopen Any Permit",
-    "resetToDefault": "Reset to Default"
+    "resetToDefault": "Reset to Default",
+    "permissionsSaved": "Permissions saved successfully!",
+    "permissionsSaveError": "Failed to save permissions"
   },
   "statistics": {
     "title": "Statistics Dashboard",
@@ -217,6 +224,9 @@
     "scanQRCode": "Scan QR Code",
     "cameraAccessDenied": "Camera access denied or not available",
     "positionQRCode": "Position the QR code within the frame to scan",
-    "invalidQRFormat": "Invalid QR code format"
+    "invalidQRFormat": "Invalid QR code format",
+    "deleteConfirm": "Delete Confirmation",
+    "closeConfirm": "Close Confirmation",
+    "reopenConfirm": "Reopen Confirmation"
   }
 }

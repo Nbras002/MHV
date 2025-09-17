@@ -5,6 +5,10 @@ import { User, REGIONS, RolePermissions, DEFAULT_ROLE_PERMISSIONS } from '../typ
 import { validatePassword, validateEmail } from '../utils/validation';
 import { usersAPI } from '../services/api';
 import { useModalScrollLock } from '../hooks/useModalScrollLock';
+import ConfirmDialog from '../components/Common/ConfirmDialog';
+import AlertDialog from '../components/Common/AlertDialog';
+import { useAlert } from '../hooks/useAlert';
+import { useConfirm } from '../hooks/useConfirm';
 import { 
   Plus, 
   Edit, 
@@ -22,6 +26,9 @@ import {
 const ControlPanelPage: React.FC = () => {
   const { t } = useTranslation();
   const { users, addUser, updateUser, deleteUser, fetchUsers } = useAuth();
+  
+  const { alert, showSuccess, showError, hideAlert } = useAlert();
+  const { confirm, showConfirm, hideConfirm } = useConfirm();
   
   const [showForm, setShowForm] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
@@ -137,7 +144,7 @@ const ControlPanelPage: React.FC = () => {
       }
       
       resetForm();
-      alert(t('users.userSaved'));
+      showSuccess(t('common.success'), t('users.userSaved'));
     } catch (err: any) {
       setError(err.response?.data?.error || t('common.error'));
     } finally {
@@ -160,12 +167,19 @@ const ControlPanelPage: React.FC = () => {
   };
 
   const handleDelete = async (userId: string, username: string) => {
-    if (window.confirm(`${t('permits.delete')} ${t('auth.username')}\n\n${t('users.deleteConfirm')}`)) {
+    const confirmed = await showConfirm(
+      `${t('permits.delete')} ${t('auth.username')}`,
+      t('users.deleteConfirm'),
+      () => {},
+      { type: 'danger', confirmText: t('permits.delete'), cancelText: t('permits.cancel') }
+    );
+    
+    if (confirmed) {
       try {
         await deleteUser(userId);
-        alert(t('users.userDeleted'));
+        showSuccess(t('common.success'), t('users.userDeleted'));
       } catch (error: any) {
-        alert(error.response?.data?.error || t('common.error'));
+        showError(t('common.error'), error.response?.data?.error || t('common.error'));
       }
     }
   };
@@ -234,8 +248,8 @@ const ControlPanelPage: React.FC = () => {
 
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto table-container">
+          <table className="w-full responsive-table min-w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -569,7 +583,7 @@ const ControlPanelPage: React.FC = () => {
                 <button
                   onClick={() => {
                     setRolePermissions(DEFAULT_ROLE_PERMISSIONS);
-                    alert(t('users.resetToDefault'));
+                    showSuccess(t('common.success'), t('users.resetToDefault'));
                   }}
                   className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
@@ -580,9 +594,9 @@ const ControlPanelPage: React.FC = () => {
                     try {
                       await saveRolePermissions(rolePermissions);
                       setShowPermissionsModal(false);
-                      alert('Permissions saved successfully!');
+                      showSuccess(t('common.success'), t('users.permissionsSaved'));
                     } catch (error) {
-                      alert('Failed to save permissions');
+                      showError(t('common.error'), t('users.permissionsSaveError'));
                     }
                   }}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
@@ -594,6 +608,28 @@ const ControlPanelPage: React.FC = () => {
           </div>
         </div>
       )}
+      
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirm.isOpen}
+        title={confirm.title}
+        message={confirm.message}
+        confirmText={confirm.confirmText}
+        cancelText={confirm.cancelText}
+        type={confirm.type}
+        onConfirm={confirm.onConfirm}
+        onCancel={confirm.onCancel}
+      />
+      
+      {/* Alert Dialog */}
+      <AlertDialog
+        isOpen={alert.isOpen}
+        title={alert.title}
+        message={alert.message}
+        type={alert.type}
+        onClose={hideAlert}
+        autoClose={alert.type === 'success'}
+      />
     </div>
   );
 };

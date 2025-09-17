@@ -10,6 +10,10 @@ import { validatePermitNumber, formatVehiclePlate } from '../utils/validation';
 import QRScanner from '../components/QRScanner';
 import { useModalScrollLock } from '../hooks/useModalScrollLock';
 import VehiclePlateInput from '../components/VehiclePlateInput';
+import ConfirmDialog from '../components/Common/ConfirmDialog';
+import AlertDialog from '../components/Common/AlertDialog';
+import { useAlert } from '../hooks/useAlert';
+import { useConfirm } from '../hooks/useConfirm';
 import { 
   Search, 
   QrCode, 
@@ -36,6 +40,9 @@ const HomePage: React.FC = () => {
   const { language } = useLanguage();
   const { permits, loading, addPermit, updatePermit, deletePermit, closePermit, reopenPermit, generatePermitNumber, refetch } = usePermits();
   const { logActivity } = useActivityLog();
+  
+  const { alert, showSuccess, showError, hideAlert } = useAlert();
+  const { confirm, showConfirm, hideConfirm } = useConfirm();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRegion, setFilterRegion] = useState('');
@@ -117,7 +124,7 @@ const HomePage: React.FC = () => {
     if (requiresVehiclePlate) {
       if (!newPermit.vehiclePlate || newPermit.vehiclePlate === 'N/A' || newPermit.vehiclePlate.trim() === '') {
         console.log('❌ Vehicle plate validation failed');
-        alert('Vehicle license plate is required for this request type');
+        showError(t('common.error'), t('permits.vehiclePlateRequired'));
         return;
       }
     }
@@ -130,7 +137,7 @@ const HomePage: React.FC = () => {
       );
       if (!hasValidMaterials) {
         console.log('❌ Materials validation failed');
-        alert('At least one material with description and serial number is required');
+        showError(t('common.error'), t('permits.materialsRequired'));
         return;
       }
     }
@@ -138,7 +145,7 @@ const HomePage: React.FC = () => {
     // Validate permit number format
     if (!validatePermitNumber(newPermit.permitNumber)) {
       console.log('❌ Permit number validation failed');
-      alert('Permit number must be in format: three letters followed by digits (e.g., MHV1234567)');
+      showError(t('common.error'), t('permits.invalidPermitNumber'));
       return;
     }
     
@@ -159,6 +166,10 @@ const HomePage: React.FC = () => {
       
       console.log('✅ Permit operation completed successfully');
       resetForm();
+      showSuccess(
+        t('common.success'), 
+        editingPermit ? t('permits.updateSuccess') : t('permits.createSuccess')
+      );
     } catch (error: any) {
       console.error('Submit error details:', {
         message: error.message,
@@ -168,7 +179,7 @@ const HomePage: React.FC = () => {
         stack: error.stack
       });
       const errorMessage = error.response?.data?.error || error.message || 'An error occurred';
-      alert(`Error: ${errorMessage}`);
+      showError(t('common.error'), errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -207,45 +218,69 @@ const HomePage: React.FC = () => {
   };
 
   const handleDelete = async (permitId: string) => {
-    if (window.confirm(`${t('permits.delete')}\n\n${t('permits.deleteConfirm')}`)) {
+    const confirmed = await showConfirm(
+      t('permits.delete'),
+      t('permits.deleteConfirm'),
+      () => {},
+      { type: 'danger', confirmText: t('permits.delete'), cancelText: t('permits.cancel') }
+    );
+    
+    if (confirmed) {
       try {
         console.log('🔄 Deleting permit:', permitId);
         await deletePermit(permitId);
         await logActivity('delete_permit', `Deleted permit`);
         console.log('✅ Permit deleted successfully');
+        showSuccess(t('common.success'), t('permits.deleteSuccess'));
       } catch (error: any) {
         console.error('❌ Delete permit error:', error);
-        alert(error.response?.data?.error || 'An error occurred');
+        showError(t('common.error'), error.response?.data?.error || t('common.error'));
       }
     }
   };
 
   const handleClose = async (permit: Permit) => {
-    if (window.confirm(`${t('permits.closePermit')}\n\n${t('permits.closeConfirm')}`)) {
+    const confirmed = await showConfirm(
+      t('permits.closePermit'),
+      t('permits.closeConfirm'),
+      () => {},
+      { type: 'warning', confirmText: t('permits.closePermit'), cancelText: t('permits.cancel') }
+    );
+    
+    if (confirmed) {
       try {
         console.log('🔄 Closing permit:', permit.id);
         await closePermit(permit.id);
         await logActivity('close_permit', `Closed permit ${permit.permitNumber}`);
         console.log('✅ Permit closed successfully');
+        showSuccess(t('common.success'), t('permits.closeSuccess'));
       } catch (error: any) {
         console.error('❌ Close permit error:', error);
-        alert(error.response?.data?.error || 'An error occurred');
+        showError(t('common.error'), error.response?.data?.error || t('common.error'));
       }
     }
   };
 
   const handleReopen = async (permit: Permit) => {
-    if (window.confirm(`${t('permits.reopenPermit')}\n\n${t('permits.reopenConfirm')}`)) {
+    const confirmed = await showConfirm(
+      t('permits.reopenPermit'),
+      t('permits.reopenConfirm'),
+      () => {},
+      { type: 'info', confirmText: t('permits.reopenPermit'), cancelText: t('permits.cancel') }
+    );
+    
+    if (confirmed) {
       try {
         console.log('🔄 Reopening permit:', permit.id);
         const success = await reopenPermit(permit.id);
         if (success) {
           await logActivity('reopen_permit', `Reopened permit ${permit.permitNumber}`);
           console.log('✅ Permit reopened successfully');
+          showSuccess(t('common.success'), t('permits.reopenSuccess'));
         }
       } catch (error: any) {
         console.error('❌ Reopen permit error:', error);
-        alert(error.response?.data?.error || 'An error occurred');
+        showError(t('common.error'), error.response?.data?.error || t('common.error'));
       }
     }
   };
@@ -253,7 +288,7 @@ const HomePage: React.FC = () => {
   const handleExport = () => {
     exportPermitsToExcel(filteredPermits);
     logActivity('export_permits', `Exported ${filteredPermits.length} permits`);
-    alert('Data exported successfully!');
+    showSuccess(t('common.success'), t('permits.exportSuccess'));
   };
 
   const handleQRScan = (result: string) => {
@@ -261,7 +296,7 @@ const HomePage: React.FC = () => {
     if (validatePermitNumber(result)) {
       setSearchTerm(result);
     } else {
-      alert('Invalid QR code format');
+      showError(t('common.error'), t('common.invalidQRFormat'));
     }
   };
 
@@ -271,7 +306,7 @@ const HomePage: React.FC = () => {
 
   const addMaterial = () => {
     if (newPermit.materials.length >= 50) {
-      alert('Maximum of 50 materials allowed per permit');
+      showWarning(t('permits.materialLimitReached'), t('permits.materialLimitReached'));
       return;
     }
     
@@ -422,8 +457,8 @@ const HomePage: React.FC = () => {
 
       {/* Permits Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto table-container">
+          <table className="w-full responsive-table min-w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -945,6 +980,28 @@ const HomePage: React.FC = () => {
         isOpen={showQRScanner}
         onScan={handleQRScan}
         onClose={() => setShowQRScanner(false)}
+      />
+      
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirm.isOpen}
+        title={confirm.title}
+        message={confirm.message}
+        confirmText={confirm.confirmText}
+        cancelText={confirm.cancelText}
+        type={confirm.type}
+        onConfirm={confirm.onConfirm}
+        onCancel={confirm.onCancel}
+      />
+      
+      {/* Alert Dialog */}
+      <AlertDialog
+        isOpen={alert.isOpen}
+        title={alert.title}
+        message={alert.message}
+        type={alert.type}
+        onClose={hideAlert}
+        autoClose={alert.type === 'success'}
       />
     </div>
   );

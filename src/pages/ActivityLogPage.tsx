@@ -131,8 +131,8 @@ const ActivityLogPage: React.FC = () => {
 
       {/* Activity Log */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto table-container">
+          <table className="w-full responsive-table min-w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">

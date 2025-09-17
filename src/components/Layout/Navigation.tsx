@@ -24,9 +24,9 @@ const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40">
+    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40 max-w-full">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 overflow-x-hidden">
 
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="flex items-center">
